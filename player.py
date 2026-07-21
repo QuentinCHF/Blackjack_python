@@ -10,7 +10,7 @@ def player_rolls(cards, player_score, player_hand):
     player_score += card["value"]
     player_hand.append(card)
 
-    print(f"{translate.translate("The Player rolls a")} {card['name']}.")
+    print(f"{translate.translate("The Player rolls a")} {card["rank"] + card["suit"]}.")
     print(f"{translate.translate("The Player has")}: {player_score}.")
     
     time.sleep(1)

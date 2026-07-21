@@ -9,31 +9,12 @@ def create_deck():
     deck = []
     deck_count = int(config["Game"]["deck_count"])
 
-    for _ in range(deck_count):
-
-        # As
-        for _ in range(4):
-            deck.append({"name": "A", "value": 1})
-
-        # 2 à 10
-        for value in range(2, 11):
-            for _ in range(4):
-                deck.append({"name": str(value), "value": value})
-
-        # Valet, Dame, Roi
-        for face in ["J", "Q", "K"]:
-            for _ in range(4):
-                deck.append({"name": face, "value": 10})
-                
-    deck = random_sort(deck)
-
-    return deck
-
-'''
-logos = (♠ ♥ ♦ ♣)
-def create_deck():
-    deck = []
-    deck_count = int(config["Game"]["deck_count"])
+    suits = [
+        ("♠", "black"),
+        ("♣", "black"),
+        ("♥", "red"),
+        ("♦", "red"),
+    ]
 
     cards = [
         ("A", 1),
@@ -51,19 +32,19 @@ def create_deck():
         ("K", 10),
     ]
 
-    for _ in range(deck_count):
-        for name, value in cards:
-            for _ in range(4):
-                deck.append({
-                    "name": name,
-                    "value": value
-                })
+    for suit, color in suits:
+        for rank, value in cards:
+            deck.append({
+                "rank": rank,
+                "value": value,
+                "suit": suit,
+                "color": color
+            })
 
-    return deck
-'''
+    return random_sort(deck)
 
 def print_cards(cards):
-    print(" ".join(card["name"] for card in cards))
+    print(" ".join(card["rank"] + card["suit"] for card in cards))
 
 def draw(deck):
     return deck.pop(0)
@@ -74,8 +55,9 @@ def card_name(card):
 def card_value(card):
     return card["value"]
 
-def hand_to_string(hand):
-    return " ".join(card["name"] for card in hand)
+def hand_to_string(cards):
+    ## How to use: print("cards is" + deck.hand_to_string(player_hand))
+    return " ".join(card["rank"] + card["suit"] for card in cards)
 
 ##----------------------------------------
 ## Different types of sorting

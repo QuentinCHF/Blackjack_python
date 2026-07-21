@@ -14,7 +14,7 @@ def dealer_rolls(cards, dealer_score, dealer_hand):
     dealer_score += card["value"]
     dealer_hand.append(card)
 
-    print(f"{translate.translate('The Dealer rolls a')} {card['name']}.")
+    print(f"{translate.translate('The Dealer rolls a')} {card["rank"] + card["suit"]}.")
     print(f"{translate.translate('The Dealer has')}: {dealer_score}.")
 
     time.sleep(1)
