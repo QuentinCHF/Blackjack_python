@@ -15,7 +15,7 @@ config.read("config.ini")
 
 def main():
     cards = deck.create_deck()
-    
+
 
     dealer_score = 0
     player_score = 0

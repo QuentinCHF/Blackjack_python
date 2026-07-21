@@ -6,10 +6,11 @@ import translate
 
 def player_rolls(cards, player_score, player_hand):
     card = cards.pop(0)
-    player_score += card
+
+    player_score += card["value"]
     player_hand.append(card)
 
-    print(f"{translate.translate("The Player rolls a")} {card}.")
+    print(f"{translate.translate("The Player rolls a")} {card['name']}.")
     print(f"{translate.translate("The Player has")}: {player_score}.")
     
     time.sleep(1)
@@ -34,5 +35,5 @@ def reroll(cards, player_score, player_hand):
     return player_score
 
 def print_cards(player_hand):
-    print(player_hand)
+    print(" ".join(card["name"] for card in player_hand))
     
