@@ -8,8 +8,8 @@ config.read("config.ini")
 LANG = config["General"]["language"]
 
 if LANG != "en":
-    language = importlib.import_module(f"lang.{LANG}")
-
+    language = importlib.import_module(f"src.lang.{LANG}")
+    
 def translate(key):
     if LANG == "en":
         return key

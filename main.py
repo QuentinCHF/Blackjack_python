@@ -3,10 +3,10 @@ import sys
 import configparser
 
 ## Importing files
-import deck
-import dealer
-import player
-import rules
+from src import deck
+from src import dealer
+from src import player
+from src import rules
 
 
 config = configparser.ConfigParser()

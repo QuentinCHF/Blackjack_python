@@ -2,7 +2,7 @@
 import time
 
 ## Importing libraries
-import translate
+from src import translate
 
 def player_rolls(cards, player_score, player_hand):
     card = cards.pop(0)

@@ -1,7 +1,7 @@
 ## Importing libraries
 
 ## Importing files
-import translate
+from src import translate
 
 def end_game(dealerNB, playerNB):
     print(f"{translate.translate('Final Score')}: ")
@@ -10,8 +10,10 @@ def end_game(dealerNB, playerNB):
 
     if (playerNB > 21):
         print(f"{translate.translate('The Dealer won')}.")
+        return 
     elif (dealerNB > 21):
         print(f"{translate.translate('The Player won')}.")
+        return 
 
     if (dealerNB > playerNB):
         print(f"{translate.translate('The Dealer won')}.")
@@ -21,4 +23,3 @@ def end_game(dealerNB, playerNB):
         print(f"{translate.translate('No winners')}.")
 
     return 
-

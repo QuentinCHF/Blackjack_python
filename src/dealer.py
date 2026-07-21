@@ -3,7 +3,7 @@ import time
 import configparser
 
 ## Importing files
-import translate
+from src import translate
 
 config = configparser.ConfigParser()
 config.read("config.ini")
