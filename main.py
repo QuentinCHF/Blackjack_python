@@ -3,10 +3,12 @@ import sys
 import configparser
 
 ## Importing files
-from src import deck
 from src import dealer
+from src import deck
+from src import game
 from src import player
 from src import rules
+from src import translate
 
 
 config = configparser.ConfigParser()
@@ -41,4 +43,8 @@ def main():
 
 ## By default, execute the main function...
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print(f"\n{translate.translate("Game interrupted")}.")
+        sys.exit(0)

@@ -32,14 +32,15 @@ def create_deck():
         ("K", 10),
     ]
 
-    for suit, color in suits:
-        for rank, value in cards:
-            deck.append({
-                "rank": rank,
-                "value": value,
-                "suit": suit,
-                "color": color
-            })
+    for _ in range(deck_count):
+        for suit, color in suits:
+            for rank, value in cards:
+                deck.append({
+                    "rank": rank,
+                    "value": value,
+                    "suit": suit,
+                    "color": color
+                })
 
     return random_sort(deck)
 

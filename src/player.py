@@ -3,16 +3,20 @@ import time
 
 ## Importing libraries
 from src import translate
+from src import rules
 
 def player_rolls(cards, player_score, player_hand):
     card = cards.pop(0)
 
+    print(f"{translate.translate("The Player rolls a")} {card["rank"] + card["suit"]}.")
+    if (card["value"] == 1 and player_score < 11):
+       time.sleep(1)
+       card["value"] = rules.ace_1_or_11()
+
     player_score += card["value"]
     player_hand.append(card)
 
-    print(f"{translate.translate("The Player rolls a")} {card["rank"] + card["suit"]}.")
     print(f"{translate.translate("The Player has")}: {player_score}.")
-    
     time.sleep(1)
 
     return player_score

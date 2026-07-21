@@ -23,3 +23,17 @@ def end_game(dealerNB, playerNB):
         print(f"{translate.translate('No winners')}.")
 
     return 
+
+def ace_1_or_11():
+    ace_choice = 0
+
+    while ace_choice == 0:
+        answer = input(translate.translate("1 or 11")+": ").lower()
+        if (answer == "1"):
+            ace_choice = 1
+            return 1
+        elif (answer == "11"):
+            ace_choice = 1
+            return 11
+        else:
+            print(f"{translate.translate("Input not taken into account")}")

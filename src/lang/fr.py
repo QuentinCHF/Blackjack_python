@@ -1,4 +1,5 @@
 translation = {
+    "Game interrupted":"Partie interrompue",
     "The Dealer rolls a": "Le Croupier a tiré un",
     "The Dealer has": "Le Croupier a",
     "The Player rolls a": "Le Joueur a tiré un",
@@ -13,5 +14,6 @@ translation = {
     "The Dealer won": "Le Croupier a gagné",
     "The Player won": "Le Joueur a gagné",
     "No winners": "Pas de gagnants",
+    "1 or 11": "1 ou 11",
     "": ""
 }
