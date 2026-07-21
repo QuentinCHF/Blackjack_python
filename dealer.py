@@ -8,23 +8,26 @@ import translate
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-def dealer_rolls(cards, dealerNB):
+def dealer_rolls(cards, dealer_score, dealer_hand):
     card = cards.pop(0)
-    dealerNB += card
+    dealer_score += card
+    dealer_hand.append(card)
 
     print(f"{translate.translate("The Dealer rolls a")} {card}.")
-    print(f"{translate.translate("The Dealer has")}: {dealerNB}.")
+    print(f"{translate.translate("The Dealer has")}: {dealer_score}.")
     
     time.sleep(1)
 
-    return dealerNB
+    return dealer_score
 
-def reroll(cards, dealerNB):
-    dealerNB = dealer_rolls(cards, dealerNB)
+def reroll(cards, dealer_score, dealer_hand):
+    dealer_score = dealer_rolls(cards, dealer_score, dealer_hand)
 
     dealer_max = int(config["Game"]["dealer_max"])
-    while (dealerNB < dealer_max and dealerNB < 21):
-        dealerNB = dealer_rolls(cards, dealerNB)        
+    while (dealer_score < dealer_max and dealer_score < 21):
+        dealer_score = dealer_rolls(cards, dealer_score, dealer_hand)        
 
-    return dealerNB            
+    return dealer_score            
     
+def print_cards(dealer_hand):
+    print(dealer_hand)

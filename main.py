@@ -3,10 +3,10 @@ import sys
 import configparser
 
 ## Importing files
+import deck
 import dealer
 import player
-import sort
-import win_condition
+import rules
 
 
 config = configparser.ConfigParser()
@@ -14,30 +14,26 @@ config.read("config.ini")
 
 
 def main():
-    cards = []
-    deck_count = int(config["Game"]["deck_count"])
-    for _ in range(deck_count):
-        for value in range(1, 11):
-            cards.extend([value] * 4)
+    cards = deck.create_deck()
+    
 
-    cards = sort.random_sort(cards)
-    ##print(cards)
+    dealer_score = 0
+    player_score = 0
 
+    dealer_hand = []
+    player_hand = []
 
-    playerNB = 0
-    dealerNB = 0
-
-
-    dealerNB = dealer.dealer_rolls(cards, dealerNB)
-    playerNB = player.player_rolls(cards, playerNB)
-    playerNB = player.player_rolls(cards, playerNB)
+    
+    dealer_score = dealer.dealer_rolls(cards, dealer_score, dealer_hand)
+    player_score = player.player_rolls(cards, player_score, player_hand)
+    player_score = player.player_rolls(cards, player_score, player_hand)
 
 
-    playerNB = player.reroll(cards, playerNB)
-    dealerNB = dealer.reroll(cards, dealerNB)
+    player_score = player.reroll(cards, player_score, player_hand)
+    dealer_score = dealer.reroll(cards, dealer_score, dealer_hand)
 
 
-    win_condition.end_game(dealerNB, playerNB)
+    rules.end_game(dealer_score, player_score)
 
 
     return 0
