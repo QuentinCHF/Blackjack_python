@@ -37,7 +37,4 @@ def reroll(cards, player_score, player_hand):
             print(f"{translate.translate("Input not taken into account")}")
 
     return player_score
-
-def print_cards(player_hand):
-    print(" ".join(card["name"] for card in player_hand))
     
