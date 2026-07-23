@@ -3,26 +3,28 @@
 ## Importing files
 from src import translate
 
-def end_game(dealerNB, playerNB):
-    print(f"{translate.translate('Final Score')}: ")
-    print(f"-{translate.translate('The Dealer has')}: {dealerNB}!")
-    print(f"-{translate.translate('The Player has')}: {playerNB}!")
+def get_winner(dealer_score, player_score, dealer_hand, player_hand):
+    player_blackjack = is_blackjack(player_hand)
+    dealer_blackjack = is_blackjack(dealer_hand)
 
-    if (playerNB > 21):
-        print(f"{translate.translate('The Dealer won')}.")
-        return 
-    elif (dealerNB > 21):
-        print(f"{translate.translate('The Player won')}.")
-        return 
+    if (player_blackjack and dealer_blackjack):
+        return "push"
+    elif (player_blackjack):
+        return "blackjack"
+    elif (dealer_blackjack):
+        return "dealer"
+    
+    if (player_score > 21):
+        return "dealer"
+    elif (dealer_score > 21):
+        return "player"
 
-    if (dealerNB > playerNB):
-        print(f"{translate.translate('The Dealer won')}.")
-    elif (playerNB > dealerNB):
-        print(f"{translate.translate('The Player won')}.")
-    else:
-        print(f"{translate.translate('No winners')}.")
+    if (dealer_score > player_score):
+        return "dealer"
+    elif (player_score > dealer_score):
+        return "player"
 
-    return 
+    return "push"
 
 def ace_1_or_11():
     ace_choice = 0
@@ -36,4 +38,12 @@ def ace_1_or_11():
             ace_choice = 1
             return 11
         else:
-            print(f"{translate.translate("Input not taken into account")}")
+            print(f"{translate.translate("Invalid input")}")
+
+def is_blackjack(hand):
+    if (len(hand) != 2):
+        return False
+
+    ranks = [card["rank"] for card in hand]
+
+    return "A" in ranks and any(rank in ["10", "J", "Q", "K"] for rank in ranks)

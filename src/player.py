@@ -10,7 +10,6 @@ def player_rolls(cards, player_score, player_hand):
 
     print(f"{translate.translate("The Player rolls a")} {card["rank"] + card["suit"]}.")
     if (card["value"] == 1 and player_score < 11):
-       time.sleep(1)
        card["value"] = rules.ace_1_or_11()
 
     player_score += card["value"]
@@ -28,13 +27,13 @@ def reroll(cards, player_score, player_hand):
     no_word = translate.translate("no")
 
     while reroll == 0 and player_score < 21:
-        answer = input(translate.translate("Does the Player want to hit ? (yes / no)")+": ").lower()
+        answer = input(translate.translate("Does the Player want to hit")+" ? "+translate.translate("(yes / no)")+": ").lower()
         if (answer == yes_word or answer == yes_word[0]):
             player_score = player_rolls(cards, player_score, player_hand)
         elif (answer == no_word or answer == no_word[0]):
             reroll = 1
         else:
-            print(f"{translate.translate("Input not taken into account")}")
+            print(f"{translate.translate("Invalid input")}")
 
     return player_score
-    
+        
