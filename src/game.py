@@ -7,22 +7,26 @@ from src import debug
 from src import deck
 from src import player
 from src import rules
+from src import save
 from src import translate
 
 config = configparser.ConfigParser()
 config.read("config.ini")
+game_save = save.load_save()
 
 def game_loop():
-    money = int(config["Game"]["starting_money"])
+    money = game_save["money"]
 
     cards = deck.create_deck()
     cards = debug.check_debug(cards)
 
     while money > 0:
         bet = ask_bet(money)
-        winner, bet = play_round(cards, money, bet)
+        winner, bet, doubled = play_round(cards, money, bet)
         money = update_balance(money, bet, winner)
         show_balance(money)
+
+        save.saving(game_save, money, bet, winner, doubled)
 
         if (money <= 0):
             print(f"{translate.translate("Game over")} ! {translate.translate("You are out of money")}.")
@@ -79,7 +83,7 @@ def play_round(cards, money, bet):
     dealer.reveal_hidden_card(dealer_score, dealer_hand)
     dealer_score = dealer.ask_draw(cards, dealer_score, dealer_hand)
 
-    return show_result(dealer_score, player_score, dealer_hand, player_hand), bet
+    return show_result(dealer_score, player_score, dealer_hand, player_hand), bet, doubled
 
 def show_result(dealer_score, player_score, dealer_hand, player_hand):
     winner = rules.get_winner(dealer_score, player_score, dealer_hand, player_hand)
@@ -90,9 +94,9 @@ def show_result(dealer_score, player_score, dealer_hand, player_hand):
 
     print()
 
-    if winner == "dealer":
+    if (winner == "dealer"):
         print(f"{translate.translate('The Dealer won')}.")
-    elif winner == "player" or winner == "blackjack":
+    elif (winner == "player" or winner == "blackjack"):
         print(f"{translate.translate('The Player won')}.")
     else:
         print(f"{translate.translate('No winners')}.")
