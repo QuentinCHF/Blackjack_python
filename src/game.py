@@ -3,6 +3,7 @@ import configparser
 
 ## Importing files
 from src import dealer
+from src import debug
 from src import deck
 from src import player
 from src import rules
@@ -55,19 +56,23 @@ def ask_bet(money):
 
 def play_round():
     cards = deck.create_deck()
+    cards = debug.check_debug(cards)
 
     dealer_score = 0
     player_score = 0
 
     dealer_hand = []
     player_hand = []
-    
-    dealer_score = dealer.dealer_rolls(cards, dealer_score, dealer_hand)
-    player_score = player.player_rolls(cards, player_score, player_hand)
-    player_score = player.player_rolls(cards, player_score, player_hand)
 
-    player_score = player.reroll(cards, player_score, player_hand)
-    dealer_score = dealer.reroll(cards, dealer_score, dealer_hand)
+    player_score = player.player_dealt(cards, player_score, player_hand)
+    dealer_score = dealer.dealer_dealt(cards, dealer_score, dealer_hand)
+    player_score = player.player_dealt(cards, player_score, player_hand)
+    dealer_score = dealer.dealer_dealt_hidden(cards, dealer_score, dealer_hand)
+
+    player_score = player.player_ask_draw(cards, player_score, player_hand)
+
+    dealer.reveal_hidden_card(dealer_score, dealer_hand)
+    dealer_score = dealer.dealer_ask_draw(cards, dealer_score, dealer_hand)
 
     return show_result(dealer_score, player_score, dealer_hand, player_hand)
 
@@ -75,8 +80,10 @@ def show_result(dealer_score, player_score, dealer_hand, player_hand):
     winner = rules.get_winner(dealer_score, player_score, dealer_hand, player_hand)
 
     print(f"{translate.translate('Final Score')}: ")
-    print(f"-{translate.translate('The Dealer has')}: {dealer_score}!")
-    print(f"-{translate.translate('The Player has')}: {player_score}!")
+    print(f"-{translate.translate('The Dealer has')}: {dealer_score}.")
+    print(f"-{translate.translate('The Player has')}: {player_score}.")
+
+    print()
 
     if winner == "dealer":
         print(f"{translate.translate('The Dealer won')}.")
@@ -84,6 +91,8 @@ def show_result(dealer_score, player_score, dealer_hand, player_hand):
         print(f"{translate.translate('The Player won')}.")
     else:
         print(f"{translate.translate('No winners')}.")
+
+    print()
 
     return winner
 

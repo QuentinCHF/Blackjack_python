@@ -5,10 +5,10 @@ import time
 from src import translate
 from src import rules
 
-def player_rolls(cards, player_score, player_hand):
+def player_dealt(cards, player_score, player_hand):
     card = cards.pop(0)
 
-    print(f"{translate.translate("The Player rolls a")} {card["rank"] + card["suit"]}.")
+    print(f"{translate.translate("The Player is dealt a")} {card["rank"] + card["suit"]}.")
     if (card["value"] == 1 and player_score < 11):
        card["value"] = rules.ace_1_or_11()
 
@@ -20,7 +20,22 @@ def player_rolls(cards, player_score, player_hand):
 
     return player_score
 
-def reroll(cards, player_score, player_hand):
+def player_draw(cards, player_score, player_hand):
+    card = cards.pop(0)
+
+    print(f"{translate.translate("The Player draws a")} {card["rank"] + card["suit"]}.")
+    if (card["value"] == 1 and player_score < 11):
+       card["value"] = rules.ace_1_or_11()
+
+    player_score += card["value"]
+    player_hand.append(card)
+
+    print(f"{translate.translate("The Player has")}: {player_score}.")
+    time.sleep(1)
+
+    return player_score
+
+def player_ask_draw(cards, player_score, player_hand):
     reroll = 0
 
     yes_word = translate.translate("yes")
@@ -29,7 +44,7 @@ def reroll(cards, player_score, player_hand):
     while reroll == 0 and player_score < 21:
         answer = input(translate.translate("Does the Player want to hit")+" ? "+translate.translate("(yes / no)")+": ").lower()
         if (answer == yes_word or answer == yes_word[0]):
-            player_score = player_rolls(cards, player_score, player_hand)
+            player_score = player_draw(cards, player_score, player_hand)
         elif (answer == no_word or answer == no_word[0]):
             reroll = 1
         else:

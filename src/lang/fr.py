@@ -7,6 +7,8 @@ translation = {
     "The minimum allowed bet is": "La mise minimale autorisée est de",
     "The Dealer rolls a": "Le Croupier a tiré un",
     "The Dealer has": "Le Croupier a",
+    "The Dealer is dealt a hidden card":"Le Croupier reçoit une carte cachée",
+    "The Dealer reveals the hidden card": "Le Croupier révèle sa carte cachée",
     "The Player rolls a": "Le Joueur a tiré un",
     "The Player has": "Le Joueur a",
     "Does the Player want to hit": "Le Joueur souhaite-t-il tirer une carte",
@@ -25,5 +27,11 @@ translation = {
     "See you next time": "À bientôt",
     "Game over": "Partie terminée",
     "You are out of money": "Vous n'avez plus d'argent",
+    "The Player is dealt a": "Le Joueur reçoit",
+    "The Dealer is dealt a": "Le Croupier reçoit",
+    "The Player draws a": "Le Joueur pioche",
+    "The Dealer draws a": "Le Croupier pioche",
+    "The Dealer receives a hidden card": "Le Croupier reçoit une carte cachée",
+    "The Dealer reveals the hidden card": "Le Croupier révèle sa carte cachée",
     "": ""
 }
