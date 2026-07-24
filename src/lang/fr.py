@@ -35,6 +35,8 @@ translation = {
     "The Dealer reveals the hidden card": "Le Croupier révèle sa carte cachée",
     "The cut card has been reached": "La carte de coupe a été atteinte",
     "Reshuffling the shoe": "Remélange du sabot",
-
+    "Double down": "Doublez la mise",
+    "Bet doubled to": "La mise est doublée à",
+    "You don't have enough money to double down": "Vous n'avez pas assez d'argent pour doubler votre mise",
     "": ""
 }

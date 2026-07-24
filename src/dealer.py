@@ -8,7 +8,7 @@ from src import translate
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-def dealer_dealt(cards, dealer_score, dealer_hand):
+def dealt(cards, dealer_score, dealer_hand):
     card = cards.pop(0)
 
     print(f"{translate.translate('The Dealer is dealt a')} {card["rank"] + card["suit"]}.")
@@ -23,7 +23,7 @@ def dealer_dealt(cards, dealer_score, dealer_hand):
 
     return dealer_score
 
-def dealer_dealt_hidden(cards, dealer_score, dealer_hand):
+def dealt_hidden(cards, dealer_score, dealer_hand):
     card = cards.pop(0)
     
     print(f"{translate.translate('The Dealer receives a hidden card')}.")
@@ -45,7 +45,7 @@ def reveal_hidden_card(dealer_score, dealer_hand):
     time.sleep(1)
 
 
-def dealer_draw(cards, dealer_score, dealer_hand):
+def draw(cards, dealer_score, dealer_hand):
     card = cards.pop(0)
 
     print(f"{translate.translate('The Dealer draws a')} {card["rank"] + card["suit"]}.")
@@ -60,9 +60,9 @@ def dealer_draw(cards, dealer_score, dealer_hand):
 
     return dealer_score
 
-def dealer_ask_draw(cards, dealer_score, dealer_hand):
+def ask_draw(cards, dealer_score, dealer_hand):
     dealer_max = int(config["Game"]["dealer_max"])
     while (dealer_score < dealer_max and dealer_score < 21):
-        dealer_score = dealer_draw(cards, dealer_score, dealer_hand)        
+        dealer_score = draw(cards, dealer_score, dealer_hand)        
 
     return dealer_score            

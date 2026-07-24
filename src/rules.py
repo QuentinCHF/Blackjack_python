@@ -38,7 +38,7 @@ def ace_1_or_11():
             ace_choice = 1
             return 11
         else:
-            print(f"{translate.translate("Invalid input")}")
+            print(f"{translate.translate("Invalid input")}.")
 
 def is_blackjack(hand):
     if (len(hand) != 2):

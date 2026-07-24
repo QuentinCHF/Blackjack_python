@@ -20,7 +20,7 @@ def game_loop():
 
     while money > 0:
         bet = ask_bet(money)
-        winner = play_round(cards)
+        winner, bet = play_round(cards, money, bet)
         money = update_balance(money, bet, winner)
         show_balance(money)
 
@@ -59,24 +59,27 @@ def ask_bet(money):
         else:
             return bet
 
-def play_round(cards):
+def play_round(cards, money, bet):
     dealer_score = 0
     player_score = 0
 
     dealer_hand = []
     player_hand = []
 
-    player_score = player.player_dealt(cards, player_score, player_hand)
-    dealer_score = dealer.dealer_dealt(cards, dealer_score, dealer_hand)
-    player_score = player.player_dealt(cards, player_score, player_hand)
-    dealer_score = dealer.dealer_dealt_hidden(cards, dealer_score, dealer_hand)
+    player_score = player.dealt(cards, player_score, player_hand)
+    dealer_score = dealer.dealt(cards, dealer_score, dealer_hand)
+    player_score = player.dealt(cards, player_score, player_hand)
+    dealer_score = dealer.dealt_hidden(cards, dealer_score, dealer_hand)
 
-    player_score = player.player_ask_draw(cards, player_score, player_hand)
+    player_score, bet, doubled = player.ask_double_down(cards, player_score, player_hand, money, bet)
+
+    if (not doubled):
+        player_score = player.ask_draw(cards, player_score, player_hand)
 
     dealer.reveal_hidden_card(dealer_score, dealer_hand)
-    dealer_score = dealer.dealer_ask_draw(cards, dealer_score, dealer_hand)
+    dealer_score = dealer.ask_draw(cards, dealer_score, dealer_hand)
 
-    return show_result(dealer_score, player_score, dealer_hand, player_hand)
+    return show_result(dealer_score, player_score, dealer_hand, player_hand), bet
 
 def show_result(dealer_score, player_score, dealer_hand, player_hand):
     winner = rules.get_winner(dealer_score, player_score, dealer_hand, player_hand)
