@@ -2,9 +2,26 @@
 import configparser
 import random
 
+## Importing files
+from src import debug
+from src import translate
+
 config = configparser.ConfigParser()
 config.read("config.ini")
 
+def check_shuffle(cards):
+    shoe_penetration = int(config["Game"]["shoe_penetration"])
+    total_cards = int(config["Game"]["deck_count"]) * 52
+
+    cut_card = int(total_cards * (100 - shoe_penetration) / 100)
+
+    if (len(cards) <= cut_card):
+        cards = create_deck()
+        cards = debug.check_debug(cards)
+        print(f"{translate.translate("The cut card has been reached")}. {translate.translate("Reshuffling the shoe")}.")
+
+    return cards
+    
 def create_deck():
     deck = []
     deck_count = int(config["Game"]["deck_count"])
@@ -55,10 +72,6 @@ def card_name(card):
 
 def card_value(card):
     return card["value"]
-
-def hand_to_string(cards):
-    ## How to use: print("cards is" + deck.hand_to_string(player_hand))
-    return " ".join(card["rank"] + card["suit"] for card in cards)
 
 ##----------------------------------------
 ## Different types of sorting

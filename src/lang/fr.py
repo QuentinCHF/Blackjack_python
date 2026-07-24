@@ -33,5 +33,8 @@ translation = {
     "The Dealer draws a": "Le Croupier pioche",
     "The Dealer receives a hidden card": "Le Croupier reçoit une carte cachée",
     "The Dealer reveals the hidden card": "Le Croupier révèle sa carte cachée",
+    "The cut card has been reached": "La carte de coupe a été atteinte",
+    "Reshuffling the shoe": "Remélange du sabot",
+
     "": ""
 }

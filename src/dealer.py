@@ -61,8 +61,6 @@ def dealer_draw(cards, dealer_score, dealer_hand):
     return dealer_score
 
 def dealer_ask_draw(cards, dealer_score, dealer_hand):
-    ##dealer_score = dealer_draw(cards, dealer_score, dealer_hand)
-
     dealer_max = int(config["Game"]["dealer_max"])
     while (dealer_score < dealer_max and dealer_score < 21):
         dealer_score = dealer_draw(cards, dealer_score, dealer_hand)        

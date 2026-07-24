@@ -15,15 +15,20 @@ config.read("config.ini")
 def game_loop():
     money = int(config["Game"]["starting_money"])
 
+    cards = deck.create_deck()
+    cards = debug.check_debug(cards)
+
     while money > 0:
         bet = ask_bet(money)
-        winner = play_round()
+        winner = play_round(cards)
         money = update_balance(money, bet, winner)
         show_balance(money)
 
         if (money <= 0):
             print(f"{translate.translate("Game over")} ! {translate.translate("You are out of money")}.")
             break
+
+        cards = deck.check_shuffle(cards)
 
         if (ask_replay() == False):
             break
@@ -54,10 +59,7 @@ def ask_bet(money):
         else:
             return bet
 
-def play_round():
-    cards = deck.create_deck()
-    cards = debug.check_debug(cards)
-
+def play_round(cards):
     dealer_score = 0
     player_score = 0
 
