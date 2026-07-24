@@ -42,7 +42,7 @@ def ask_bet(money):
     show_balance(money)
 
     while True:
-        answer = input(translate.translate("Place your bet") + ": ")
+        answer = input(f"{translate.translate("Place your bet")}: {currency}")
 
         try:
             bet = int(answer)
@@ -106,6 +106,10 @@ def show_balance(money):
 
     print(f"{translate.translate("Current balance")}: {currency}{money}.")
     print()
+
+def format_money(amount):
+    currency = config["Game"]["currency"]
+    return (f"{currency}{amount}")
 
 def update_balance(money, bet, winner):
     blackjack_payout = float(config["Game"]["blackjack_payout"])
