@@ -67,19 +67,46 @@ def ask_double_down(cards, player_score, player_hand, money, bet):
 
     while (True):
         answer = input(translate.translate("Double down")+" ? "+translate.translate("(yes / no)")+": ").lower()
-        if (bet * 2 > money):
-            print(f"{translate.translate("You don't have enough money to double down")}.")
-            time.sleep(1)
-            return player_score, bet, False
-        else:
-            if (answer == yes_word or answer == yes_word[0]):
+        if (answer == yes_word or answer == yes_word[0]):
+            if (bet * 2 > money):
+                print(f"{translate.translate("You don't have enough money to double down")}.")
+                time.sleep(1)
+                return player_score, bet, False
+            else:
                 bet *= 2
                 print(f"{translate.translate("Bet doubled to")} {currency}{bet}.")
                 time.sleep(1)
                 player_score = draw(cards, player_score, player_hand)
                 return player_score, bet, True
-            elif (answer == no_word or answer == no_word[0]):
-                return player_score, bet, False
-            else:
-                print(f"{translate.translate("Invalid input")}.")
-        
+        elif (answer == no_word or answer == no_word[0]):
+            return player_score, bet, False
+        else:
+            print(f"{translate.translate("Invalid input")}.")
+
+def ask_choice(hand, money, bet):
+
+    choices = {
+        "H": "Hit",
+        "S": "Stand",
+    }
+
+    if (rules.can_double_down(hand, money, bet)):
+        choices["D"] = "Double Down"
+
+    if (rules.can_split()):
+        choices["P"] = "Split"
+
+    while (True):
+
+        print()
+        print(f"{translate.translate("Choose an action")}: ")
+
+        for key, value in choices.items():
+            print(f"({key}) {translate.translate(value)}")
+
+        answer = input("> ").strip().upper()
+
+        if (answer in choices):
+            return answer
+
+        print(f"{translate.translate("Invalid input")}.")

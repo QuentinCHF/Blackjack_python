@@ -38,5 +38,10 @@ translation = {
     "Double down": "Doublez la mise",
     "Bet doubled to": "La mise est doublée à",
     "You don't have enough money to double down": "Vous n'avez pas assez d'argent pour doubler votre mise",
+    "Choose an action": "Choisissez une action",
+    "Hit": "Tirer",
+    "Stand": "Rester",
+    "Double Down": "Doubler",
+    "Split": "Partager",
     "": ""
 }

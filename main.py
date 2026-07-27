@@ -1,21 +1,13 @@
 ## Importing libraries
 import sys
-import configparser
 
 ## Importing files
 from src import game
 from src import translate
-from src import save
-
-config = configparser.ConfigParser()
-config.read("config.ini")
 
 def main():
-    
     game.game_loop()
-
     return 0
-
 
 ## By default, execute the main function...
 if __name__ == "__main__":

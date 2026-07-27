@@ -1,5 +1,6 @@
 ## Importing libraries
 import configparser
+import time
 
 ## Importing files
 from src import dealer
@@ -63,7 +64,7 @@ def ask_bet(money):
         else:
             return bet
 
-def play_round(cards, money, bet):
+def initialized_round(cards):
     dealer_score = 0
     player_score = 0
 
@@ -75,10 +76,35 @@ def play_round(cards, money, bet):
     player_score = player.dealt(cards, player_score, player_hand)
     dealer_score = dealer.dealt_hidden(cards, dealer_score, dealer_hand)
 
-    player_score, bet, doubled = player.ask_double_down(cards, player_score, player_hand, money, bet)
+    return dealer_score, player_score, dealer_hand, player_hand
 
-    if (not doubled):
-        player_score = player.ask_draw(cards, player_score, player_hand)
+def play_round(cards, money, bet):
+    dealer_score, player_score, dealer_hand, player_hand = initialized_round(cards)
+    doubled = False
+
+    while True:
+        choice = player.ask_choice(player_hand, money, bet)
+
+        if (choice == "H"):
+            player_score = player.draw(cards, player_score, player_hand)
+
+            if player_score >= 21:
+                break
+
+        elif (choice == "S"):
+            break
+
+        elif (choice == "D"):
+            currency = config["Game"]["currency"]
+            bet *= 2
+            print(f"{translate.translate("Bet doubled to")} {currency}{bet}.")
+            time.sleep(1)
+            player_score = player.draw(cards, player_score, player_hand)
+            doubled = True
+            break
+
+        elif (choice == "P"):
+            print("Spilt not available yet...")
 
     dealer.reveal_hidden_card(dealer_score, dealer_hand)
     dealer_score = dealer.ask_draw(cards, dealer_score, dealer_hand)

@@ -47,3 +47,14 @@ def is_blackjack(hand):
     ranks = [card["rank"] for card in hand]
 
     return "A" in ranks and any(rank in ["10", "J", "Q", "K"] for rank in ranks)
+
+def can_double_down(hand, money, bet):
+    if (len(hand) > 2):
+        return False
+    if (bet * 2 > money):
+        return False
+
+    return True
+
+def can_split():
+    return False
