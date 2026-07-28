@@ -10,7 +10,7 @@ def check_debug(cards):
     debug_enabled = config.getboolean("Debug", "enabled")
     scenario = config["Debug"]["scenario"]
     if (debug_enabled):
-        print("DEBUG")
+        print("/!\\ DEBUG MODE /!\\")
         apply_scenario(cards, scenario)
 
     return cards
@@ -20,11 +20,11 @@ def apply_scenario(cards, scenario):
         player1 = find_card(cards, "A", "♠")
         player2 = find_card(cards, "K", "♦")
         dealer1 = find_card(cards, "9", "♣")
-        dealer2 = find_card(cards, "9", "♥")
+        dealer2 = find_card(cards, "8", "♥")
 
     if (scenario == "blackjack_dealer"):
         player1 = find_card(cards, "9", "♠")
-        player2 = find_card(cards, "9", "♦")
+        player2 = find_card(cards, "8", "♦")
         dealer1 = find_card(cards, "A", "♣")
         dealer2 = find_card(cards, "K", "♥")
 
@@ -37,6 +37,12 @@ def apply_scenario(cards, scenario):
     if (scenario == "player_20"):
         player1 = find_card(cards, "10", "♠")
         player2 = find_card(cards, "K", "♦")
+        dealer1 = find_card(cards, "9", "♣")
+        dealer2 = find_card(cards, "8", "♥")
+
+    if (scenario == "split_splayer"):
+        player1 = find_card(cards, "2", "♠")
+        player2 = find_card(cards, "2", "♦")
         dealer1 = find_card(cards, "9", "♣")
         dealer2 = find_card(cards, "8", "♥")
 

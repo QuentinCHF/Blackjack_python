@@ -7,9 +7,9 @@ from src import translate
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-def get_winner(dealer_hands, player_hands):
-    player_blackjack = is_blackjack(player_hands["hand"])
-    dealer_blackjack = is_blackjack(dealer_hands["hand"])
+def get_winner(dealer_hand, player_hand):
+    player_blackjack = is_blackjack(player_hand["hand"])
+    dealer_blackjack = is_blackjack(dealer_hand["hand"])
 
     if (player_blackjack and dealer_blackjack):
         return "push"
@@ -18,14 +18,14 @@ def get_winner(dealer_hands, player_hands):
     elif (dealer_blackjack):
         return "dealer"
     
-    if (player_hands["score"] > 21):
+    if (player_hand["score"] > 21):
         return "dealer"
-    elif (dealer_hands["score"] > 21):
+    elif (dealer_hand["score"] > 21):
         return "player"
 
-    if (dealer_hands["score"] > player_hands["score"]):
+    if (dealer_hand["score"] > player_hand["score"]):
         return "dealer"
-    elif (player_hands["score"] > dealer_hands["score"]):
+    elif (player_hand["score"] > dealer_hand["score"]):
         return "player"
 
     return "push"
@@ -55,7 +55,7 @@ def is_blackjack(hand):
 def can_double_down(hand, money, bet):
     double_after_split = config.getboolean("Game", "double_after_split")
     
-    if (len(hand) > 2):
+    if (len(hand["hand"]) > 2):
         return False
     if (bet * 2 > money):
         return False
@@ -63,9 +63,9 @@ def can_double_down(hand, money, bet):
     return True
 
 def can_split(hand, money, bet):
-    if (len(hand) > 2):
+    if (len(hand["hand"]) > 2):
             return False
     if (bet * 2 > money):
         return False
     
-    return hand[0]["value"] == hand[1]["value"]
+    return hand["hand"][0]["value"] == hand["hand"][1]["value"]

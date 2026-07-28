@@ -9,40 +9,39 @@ from src import rules
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-def dealt(cards, hands):
+def dealt(cards, hand):
     card = cards.pop(0)
 
     print(f"{translate.translate("The Player is dealt a")} {card["rank"] + card["suit"]}.")
-    if (card["value"] == 1 and hands["score"] < 11):
+    if (card["value"] == 1 and hand["score"] < 11):
        card["value"] = rules.ace_1_or_11()
 
-    hands["score"] += card["value"]
-    hands["hand"].append(card)
+    hand["score"] += card["value"]
+    hand["hand"].append(card)
 
-    print(f"{translate.translate("The Player has")}: {hands["score"]}.")
+    print(f"{translate.translate("The Player has")}: {hand["score"]}.")
     time.sleep(1)
 
-    return hands
+    return hand
 
-def draw(cards, hands):
+def draw(cards, hand):
     card = cards.pop(0)
 
     print(f"{translate.translate("The Player draws a")} {card["rank"] + card["suit"]}.")
-    if (card["value"] == 1 and hands["score"] < 11):
+    if (card["value"] == 1 and hand["score"] < 11):
        card["value"] = rules.ace_1_or_11()
 
-    hands["score"] += card["value"]
-    hands["hand"].append(card)
+    hand["score"] += card["value"]
+    hand["hand"].append(card)
 
-    print(f"{translate.translate("The Player has")}: {hands["score"]}.")
+    print(f"{translate.translate("The Player has")}: {hand["score"]}.")
     time.sleep(1)
 
-    return hands
+    return hand
 
-def ask_choice(hands, money):
-    hand = hands["hand"]
-    bet = hands["bet"]
-    
+def ask_choice(hand, money):
+    bet = hand["bet"]
+
     choices = {
         "H": "Hit",
         "S": "Stand",
