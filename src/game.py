@@ -17,6 +17,7 @@ game_save = save.load_save()
 
 def game_loop():
     money = game_save["money"]
+    auto_restart = config.getboolean("Game", "auto_restart")
 
     cards = deck.create_deck()
     cards = debug.check_debug(cards)
@@ -25,18 +26,20 @@ def game_loop():
         bet = ask_bet(money)
         winner, bet, doubled = play_round(cards, money, bet)
         money = update_balance(money, bet, winner)
-        show_balance(money)
 
         save.saving(game_save, money, bet, winner, doubled)
 
         if (money <= 0):
+            show_balance(money)
             print(f"{translate.translate("Game over")} ! {translate.translate("You are out of money")}.")
             break
 
         cards = deck.check_shuffle(cards)
 
-        if (ask_replay() == False):
-            break
+        if (auto_restart == False):
+            show_balance(money)
+            if (ask_replay() == False):
+                break
 
 def ask_bet(money):
     bet = 0
@@ -64,59 +67,65 @@ def ask_bet(money):
         else:
             return bet
 
-def initialized_round(cards):
-    dealer_score = 0
-    player_score = 0
+def initialized_round(cards, bet):
+    player_hands = {
+        "hand": [],
+        "score": 0,
+        "bet": bet
+    }
 
-    dealer_hand = []
-    player_hand = []
+    dealer_hands = {
+        "hand": [],
+        "score": 0
+    }
 
-    player_score = player.dealt(cards, player_score, player_hand)
-    dealer_score = dealer.dealt(cards, dealer_score, dealer_hand)
-    player_score = player.dealt(cards, player_score, player_hand)
-    dealer_score = dealer.dealt_hidden(cards, dealer_score, dealer_hand)
+    player_hands = player.dealt(cards, player_hands)
+    dealer_hands = dealer.dealt(cards, dealer_hands)
+    player_hands = player.dealt(cards, player_hands)
+    dealer_hands = dealer.dealt_hidden(cards, dealer_hands)
 
-    return dealer_score, player_score, dealer_hand, player_hand
+    return dealer_hands, player_hands
 
 def play_round(cards, money, bet):
-    dealer_score, player_score, dealer_hand, player_hand = initialized_round(cards)
+    dealer_hands, player_hands = initialized_round(cards, bet)
     doubled = False
 
-    while True:
-        choice = player.ask_choice(player_hand, money, bet)
+    if player_hands["score"] < 21:
+        while True:
+            choice = player.ask_choice(player_hands, money)
 
-        if (choice == "H"):
-            player_score = player.draw(cards, player_score, player_hand)
+            if (choice == "H"):
+                player_hands = player.draw(cards, player_hands)
 
-            if player_score >= 21:
+                if player_hands["score"] >= 21:
+                    break
+
+            elif (choice == "S"):
                 break
 
-        elif (choice == "S"):
-            break
+            elif (choice == "D"):
+                currency = config["Game"]["currency"]
+                player_hands["bet"] *= 2
+                print(f"{translate.translate("Bet doubled to")} {currency}{player_hands["bet"]}.")
+                time.sleep(1)
+                player_hands = player.draw(cards, player_hands)
+                doubled = True
+                break
 
-        elif (choice == "D"):
-            currency = config["Game"]["currency"]
-            bet *= 2
-            print(f"{translate.translate("Bet doubled to")} {currency}{bet}.")
-            time.sleep(1)
-            player_score = player.draw(cards, player_score, player_hand)
-            doubled = True
-            break
+            elif (choice == "P"):
+                print("Spilt not available yet...")
 
-        elif (choice == "P"):
-            print("Spilt not available yet...")
+    dealer.reveal_hidden_card(dealer_hands)
+    dealer_hands = dealer.ask_draw(cards, dealer_hands)
 
-    dealer.reveal_hidden_card(dealer_score, dealer_hand)
-    dealer_score = dealer.ask_draw(cards, dealer_score, dealer_hand)
+    return show_result(dealer_hands, player_hands), player_hands["bet"], doubled
 
-    return show_result(dealer_score, player_score, dealer_hand, player_hand), bet, doubled
-
-def show_result(dealer_score, player_score, dealer_hand, player_hand):
-    winner = rules.get_winner(dealer_score, player_score, dealer_hand, player_hand)
+def show_result(dealer_hands, player_hands):
+    winner = rules.get_winner(dealer_hands, player_hands)
 
     print(f"{translate.translate('Final Score')}: ")
-    print(f"-{translate.translate('The Dealer has')}: {dealer_score}.")
-    print(f"-{translate.translate('The Player has')}: {player_score}.")
+    print(f"-{translate.translate('The Dealer has')}: {dealer_hands["score"]}.")
+    print(f"-{translate.translate('The Player has')}: {player_hands["score"]}.")
 
     print()
 

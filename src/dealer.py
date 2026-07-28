@@ -8,61 +8,61 @@ from src import translate
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-def dealt(cards, dealer_score, dealer_hand):
+def dealt(cards, hands):
     card = cards.pop(0)
 
     print(f"{translate.translate('The Dealer is dealt a')} {card["rank"] + card["suit"]}.")
-    if (card["value"] == 1 and dealer_score < 11):
+    if (card["value"] == 1 and hands["score"] < 11):
        card["value"] = 11
 
-    dealer_score += card["value"]
-    dealer_hand.append(card)
+    hands["score"] += card["value"]
+    hands["hand"].append(card)
 
-    print(f"{translate.translate('The Dealer has')}: {dealer_score}.")
+    print(f"{translate.translate('The Dealer has')}: {hands["score"]}.")
     time.sleep(1)
 
-    return dealer_score
+    return hands
 
-def dealt_hidden(cards, dealer_score, dealer_hand):
+def dealt_hidden(cards, hands):
     card = cards.pop(0)
     
     print(f"{translate.translate('The Dealer receives a hidden card')}.")
 
-    if (card["value"] == 1 and dealer_score < 11):
+    if (card["value"] == 1 and hands["score"] < 11):
            card["value"] = 11
 
-    dealer_score += card["value"]
-    dealer_hand.append(card)
+    hands["score"] += card["value"]
+    hands["hand"].append(card)
 
     time.sleep(1)
 
-    return dealer_score
+    return hands
 
-def reveal_hidden_card(dealer_score, dealer_hand):
-    card = dealer_hand[1]
+def reveal_hidden_card(hands):
+    card = hands["hand"][1]
     print(f"{translate.translate('The Dealer reveals the hidden card')}: {card['rank']}{card['suit']}.")
-    print(f"{translate.translate('The Dealer has')}: {dealer_score}.")
+    print(f"{translate.translate('The Dealer has')}: {hands["score"]}.")
     time.sleep(1)
 
 
-def draw(cards, dealer_score, dealer_hand):
+def draw(cards, hands):
     card = cards.pop(0)
 
     print(f"{translate.translate('The Dealer draws a')} {card["rank"] + card["suit"]}.")
-    if (card["value"] == 1 and dealer_score < 11):
+    if (card["value"] == 1 and hands["score"] < 11):
        card["value"] = 11
 
-    dealer_score += card["value"]
-    dealer_hand.append(card)
+    hands["score"] += card["value"]
+    hands["hand"].append(card)
 
-    print(f"{translate.translate('The Dealer has')}: {dealer_score}.")
+    print(f"{translate.translate('The Dealer has')}: {hands["score"]}.")
     time.sleep(1)
 
-    return dealer_score
+    return hands
 
-def ask_draw(cards, dealer_score, dealer_hand):
+def ask_draw(cards, hands):
     dealer_max = int(config["Game"]["dealer_max"])
-    while (dealer_score < dealer_max and dealer_score < 21):
-        dealer_score = draw(cards, dealer_score, dealer_hand)        
+    while (hands["score"] < dealer_max and hands["score"] < 21):
+        hands = draw(cards, hands)        
 
-    return dealer_score            
+    return hands            

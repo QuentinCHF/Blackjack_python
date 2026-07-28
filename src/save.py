@@ -44,7 +44,13 @@ def load_save():
         return create_new_save()
 
     with open("save.json", "r") as file:
-        return json.load(file)
+        save = json.load(file)
+
+    if save["money"] <= 0:
+        print(f"{translate.translate("No money left")}. {translate.translate("Starting a new game")}.")
+        return create_new_save()
+
+    return save
 
 def save_game(save):
     with open("save.json", "w") as file:
@@ -69,11 +75,11 @@ def create_new_save():
     with open("save.json", "w", encoding="utf-8") as f:
         json.dump(datas, f, indent=4, ensure_ascii=False)
 
+    return f
+
 def reset_save():
     if os.path.exists("save.json"):
         os.remove("save.json")
-        # print(f"save.json deleted.")
         create_new_save()
     else:
-        # print(f"save.json doesn't exist.")
         pass

@@ -43,5 +43,7 @@ translation = {
     "Stand": "Rester",
     "Double Down": "Doubler",
     "Split": "Partager",
+    "No money left": "Vous n'avez plus d'argent",
+    "Starting a new game": "Une nouvelle partie commence.",
     "": ""
 }
