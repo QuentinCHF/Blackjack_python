@@ -3,6 +3,7 @@ import configparser
 
 ## Importing files
 from src import translate
+from src import constants
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -34,15 +35,15 @@ def ace_1_or_11():
     ace_choice = 0
 
     while ace_choice == 0:
-        answer = input(translate.translate("1 or 11")+": ").lower()
-        if (answer == "1"):
+        answer = input(translate.translate('1 or 11')+": ").lower()
+        if (answer == '1'):
             ace_choice = 1
             return 1
-        elif (answer == "11"):
+        elif (answer == '11'):
             ace_choice = 1
             return 11
         else:
-            print(f"{translate.translate("Invalid input")}.")
+            print(f"{translate.translate('Invalid input')}.")
 
 def is_blackjack(hand):
     if (len(hand) != 2):
@@ -55,6 +56,8 @@ def is_blackjack(hand):
 def can_double_down(hand, money, bet):
     double_after_split = config.getboolean("Game", "double_after_split")
     
+    if (constants.ACTION_SPLIT in hand["actions"] and not double_after_split):
+        return False
     if (len(hand["hand"]) > 2):
         return False
     if (bet * 2 > money):
