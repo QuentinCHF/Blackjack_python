@@ -10,6 +10,7 @@ from src import player
 from src import rules
 from src import save
 from src import translate
+from src import constants
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -18,16 +19,22 @@ game_save = save.load_save()
 def game_loop():
     money = game_save["money"]
     auto_restart = config.getboolean("Game", "auto_restart")
+
     cards = deck.create_deck()
     cards = debug.check_debug(cards)
 
     while money > 0:
         bet = ask_bet(money)
-        winners, bet, doubled = play_round(cards, money, bet)
+        results = play_round(cards, money, bet)
 
-        for winner in winners:
-            money = update_balance(money, bet, winner)
-            save.saving(game_save, money, bet, winner, doubled)
+        for result in results:
+            hand = result["hand"]
+            winner = result["winner"]
+
+            money = update_balance(money, hand["bet"], winner)
+            save.saving(game_save, money, hand, winner)
+
+        save.game_played(game_save)
 
         if (money <= 0):
             show_balance(money)
@@ -71,7 +78,8 @@ def initialized_round(cards, bet):
     player_hand = {
         "hand": [],
         "score": 0,
-        "bet": bet
+        "bet": bet,
+        "actions": []
     }
 
     dealer_hand = {
@@ -87,8 +95,6 @@ def initialized_round(cards, bet):
     return dealer_hand, player_hand
 
 def play_player_turn(cards, hand, money):
-    doubled = False
-
     if hand["score"] >= 21:
         return
 
@@ -96,42 +102,39 @@ def play_player_turn(cards, hand, money):
         choice = player.ask_choice(hand, money)
 
         if (choice == "H"):
+            hand["actions"].append(constants.ACTION_HIT)
             hand = player.draw(cards, hand)
 
             if (hand["score"] >= 21):
                 break
 
         elif (choice == "S"):
+            hand["actions"].append(constants.ACTION_STAND)
             break
 
         elif (choice == "D"):
+            hand["actions"].append(constants.ACTION_DOUBLE)
             currency = config["Game"]["currency"]
             hand["bet"] *= 2
             print(f"{translate.translate("Bet doubled to")} {currency}{hand["bet"]}.")
             time.sleep(1)
             hand = player.draw(cards, hand)
-            doubled = True
             break
 
         elif (choice == "P"):
+            hand["actions"].append(constants.ACTION_SPLIT)
             hand1, hand2 = split_hand(cards, hand);
-            return [hand1, hand2], doubled, True
+            return [hand1, hand2], True
 
-    return [hand], doubled, False
+    return [hand], False
 
 def play_round(cards, money, bet):
     dealer_hand, player_hand = initialized_round(cards, bet)
     player_hands = [player_hand]
-    doubled = False
-
     i = 0
-    while i < len(player_hands):
-        new_hands, doubled, splitted = play_player_turn(
-            cards,
-            player_hands[i],
-            money
-        )
 
+    while i < len(player_hands):
+        new_hands, splitted = play_player_turn(cards, player_hands[i], money)
         player_hands[i:i+1] = new_hands
 
         if not splitted:
@@ -140,13 +143,15 @@ def play_round(cards, money, bet):
     dealer.reveal_hidden_card(dealer_hand)
     dealer_hand = dealer.ask_draw(cards, dealer_hand)
 
-    winners = []
+    results = []
 
     for hand in player_hands:
-        winners.append(show_result(dealer_hand, hand))
+        results.append({
+            "winner": show_result(dealer_hand, hand),
+            "hand": hand
+        })
 
-
-    return winners, player_hand["bet"], doubled
+    return results
 
 def show_result(dealer_hand, player_hand):
     winner = rules.get_winner(dealer_hand, player_hand)
@@ -206,13 +211,15 @@ def split_hand(cards, hand):
     hand1 = {
         "hand": [card1],
         "score": card1["value"],
-        "bet": hand["bet"]
+        "bet": hand["bet"],
+        "actions": hand["actions"]
     }
 
     hand2 = {
         "hand": [card2],
         "score": card2["value"],
-        "bet": hand["bet"]
+        "bet": hand["bet"],
+        "actions": hand["actions"]
     }
 
     hand1 = player.draw(cards, hand1)
