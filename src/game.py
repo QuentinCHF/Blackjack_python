@@ -58,6 +58,7 @@ def ask_bet(money):
 
     while True:
         answer = input(f"{translate.translate("Place your bet")}: {currency}")
+        print()
 
         try:
             bet = int(answer)
@@ -99,7 +100,9 @@ def play_player_turn(cards, hand, money):
         return
 
     while True:
+        print()
         choice = player.ask_choice(hand, money)
+        print()
 
         if (choice == "H"):
             hand["actions"].append(constants.ACTION_HIT)
@@ -209,6 +212,8 @@ def split_hand(cards, hand):
     card2 = hand["hand"][1]
 
     hand1 = {
+        "id": 1,
+        "name": "Hand 1",
         "hand": [card1],
         "score": card1["value"],
         "bet": hand["bet"],
@@ -216,13 +221,20 @@ def split_hand(cards, hand):
     }
 
     hand2 = {
+        "id": 2,
+        "name": "Hand 2",
         "hand": [card2],
         "score": card2["value"],
         "bet": hand["bet"],
         "actions": hand["actions"]
     }
 
+    print(f"{translate.translate("First hand")}.")
     hand1 = player.draw(cards, hand1)
+
+    print()
+
+    print(f"{translate.translate("Second hand")}.")
     hand2 = player.draw(cards, hand2)
 
     return hand1, hand2

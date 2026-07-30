@@ -52,7 +52,10 @@ def ask_choice(hand, money):
         choices["P"] = "Split"
 
     while (True):
-        print()
+        if ("name" in hand):
+            print(f"--- {translate.translate("Hand")} {hand["id"]} ---")
+            ## print(f"\n--- {hand['name']} ---")
+
         print(f"{translate.translate("Choose an action")}: ")
 
         for key, value in choices.items():

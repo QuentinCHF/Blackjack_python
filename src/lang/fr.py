@@ -45,5 +45,9 @@ translation = {
     "Split": "Partager",
     "No money left": "Vous n'avez plus d'argent",
     "Starting a new game": "Une nouvelle partie commence.",
+    "First hand": "Première main",
+    "Second hand": "Seconde main",
+    "Hand": "Main",
+    "hand": "main",
     "": ""
 }
