@@ -40,6 +40,12 @@ def apply_scenario(cards, scenario):
         dealer1 = find_card(cards, "9", "♣")
         dealer2 = find_card(cards, "8", "♥")
 
+    if (scenario == "dealer_20"):
+            player1 = find_card(cards, "9", "♣")
+            player2 = find_card(cards, "8", "♥")
+            dealer1 = find_card(cards, "10", "♠")
+            dealer2 = find_card(cards, "K", "♦")
+
     if (scenario == "split_splayer"):
         player1 = find_card(cards, "2", "♠")
         player2 = find_card(cards, "2", "♦")

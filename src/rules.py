@@ -60,7 +60,7 @@ def can_double_down(hand, money, bet):
         return False
     if (len(hand["hand"]) > 2):
         return False
-    if (bet * 2 > money):
+    if (bet > money):
         return False
 
     return True
@@ -68,7 +68,7 @@ def can_double_down(hand, money, bet):
 def can_split(hand, money, bet):
     if (len(hand["hand"]) > 2):
             return False
-    if (bet * 2 > money):
+    if (bet > money):
         return False
     
     return hand["hand"][0]["value"] == hand["hand"][1]["value"]

@@ -24,7 +24,7 @@ def game_loop():
     cards = debug.check_debug(cards)
 
     while money > 0:
-        bet = ask_bet(money)
+        money, bet = ask_bet(money)
         results = play_round(cards, money, bet)
 
         for result in results:
@@ -73,7 +73,8 @@ def ask_bet(money):
         elif (bet < min_bet):
             print(f"{translate.translate("The minimum allowed bet is")} {currency}{min_bet}.")
         else:
-            return bet
+            money -= bet
+            return money, bet
 
 def initialized_round(cards, bet):
     player_hand = {
@@ -97,7 +98,7 @@ def initialized_round(cards, bet):
 
 def play_player_turn(cards, hand, money):
     if hand["score"] >= 21:
-        return
+        return [hand], money, False
 
     while True:
         print()
@@ -118,6 +119,7 @@ def play_player_turn(cards, hand, money):
         elif (choice == "D"):
             hand["actions"].append(constants.ACTION_DOUBLE)
             currency = config["Game"]["currency"]
+            money -= hand["bet"]
             hand["bet"] *= 2
             print(f"{translate.translate("Bet doubled to")} {currency}{hand["bet"]}.")
             time.sleep(1)
@@ -127,9 +129,10 @@ def play_player_turn(cards, hand, money):
         elif (choice == "P"):
             hand["actions"].append(constants.ACTION_SPLIT)
             hand1, hand2 = split_hand(cards, hand);
-            return [hand1, hand2], True
+            money -= hand["bet"]
+            return [hand1, hand2], money, True
 
-    return [hand], False
+    return [hand], money, False
 
 def play_round(cards, money, bet):
     dealer_hand, player_hand = initialized_round(cards, bet)
@@ -137,7 +140,7 @@ def play_round(cards, money, bet):
     i = 0
 
     while i < len(player_hands):
-        new_hands, splitted = play_player_turn(cards, player_hands[i], money)
+        new_hands, money, splitted = play_player_turn(cards, player_hands[i], money)
         player_hands[i:i+1] = new_hands
 
         if not splitted:
@@ -184,12 +187,12 @@ def show_balance(money):
 def update_balance(money, bet, winner):
     blackjack_payout = float(config["Game"]["blackjack_payout"])
 
-    if (winner == "dealer"):
-        money -= bet
-    elif (winner == "player"):
-        money += bet
+    if (winner == "player"):
+        money += bet * 2
     elif (winner == "blackjack"):
-        money += int(bet * blackjack_payout)
+        money += bet+ int(bet * blackjack_payout)
+    elif (winner == "push"):
+        money += bet
 
     return money
 
