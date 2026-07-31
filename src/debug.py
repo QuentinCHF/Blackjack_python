@@ -1,5 +1,6 @@
 ## Importing libraries
 import configparser
+import sys
 
 ## Importing files
 
@@ -21,36 +22,35 @@ def apply_scenario(cards, scenario):
         player2 = find_card(cards, "K", "♦")
         dealer1 = find_card(cards, "9", "♣")
         dealer2 = find_card(cards, "8", "♥")
-
-    if (scenario == "blackjack_dealer"):
+    elif (scenario == "blackjack_dealer"):
         player1 = find_card(cards, "9", "♠")
         player2 = find_card(cards, "8", "♦")
         dealer1 = find_card(cards, "A", "♣")
         dealer2 = find_card(cards, "K", "♥")
-
-    if (scenario == "push_18"):
+    elif (scenario == "push_18"):
         player1 = find_card(cards, "10", "♠")
         player2 = find_card(cards, "8", "♦")
         dealer1 = find_card(cards, "9", "♣")
         dealer2 = find_card(cards, "9", "♥")
-
-    if (scenario == "player_20"):
+    elif (scenario == "player_20"):
         player1 = find_card(cards, "10", "♠")
         player2 = find_card(cards, "K", "♦")
         dealer1 = find_card(cards, "9", "♣")
         dealer2 = find_card(cards, "8", "♥")
-
-    if (scenario == "dealer_20"):
+    elif (scenario == "dealer_20"):
             player1 = find_card(cards, "9", "♣")
             player2 = find_card(cards, "8", "♥")
             dealer1 = find_card(cards, "10", "♠")
             dealer2 = find_card(cards, "K", "♦")
-
-    if (scenario == "split_splayer"):
+    elif (scenario == "split_player"):
         player1 = find_card(cards, "2", "♠")
         player2 = find_card(cards, "2", "♦")
         dealer1 = find_card(cards, "9", "♣")
         dealer2 = find_card(cards, "8", "♥")
+    else:
+        print(f"Unknown debug scenario: '{scenario}'.")
+        sys.exit(0)
+        return cards
 
     cards.remove(player1)
     cards.remove(dealer1)
