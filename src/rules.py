@@ -15,9 +15,9 @@ def get_winner(dealer_hand, player_hand):
     if (player_blackjack and dealer_blackjack):
         return "push"
     elif (player_blackjack):
-        return "blackjack"
+        return "player_blackjack"
     elif (dealer_blackjack):
-        return "dealer"
+        return "dealer_blackjack"
     
     if (player_hand["score"] > 21):
         return "dealer"

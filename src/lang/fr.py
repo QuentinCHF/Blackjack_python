@@ -49,5 +49,6 @@ translation = {
     "Second hand": "Seconde main",
     "Hand": "Main",
     "hand": "main",
+    "Insurance": "Assurance",
     "": ""
 }

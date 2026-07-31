@@ -5,6 +5,7 @@ import configparser
 ## Importing libraries
 from src import translate
 from src import rules
+from src import constants
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -67,3 +68,20 @@ def ask_choice(hand, money):
             return answer
 
         print(f"{translate.translate("Invalid input")}.")
+
+def ask_insurance(hand, money, bet):
+    if (bet // 2 < money):
+        yes_word = translate.translate("yes")
+        no_word = translate.translate("no")
+    
+        while (True):
+            answer = input(f"{translate.translate("Insurance")} ? {translate.translate("(yes / no)")}: ").lower()
+            if (answer == yes_word or answer == yes_word[0]):
+                money -= bet // 2
+                hand["insurance"] = bet // 2
+                hand["actions"].append(constants.ACTION_INSURANCE)
+                return hand, money
+            elif (answer == no_word or answer == no_word[0]):
+                return hand, money
+            else:
+                print(f"{translate.translate("Invalid input")}.")

@@ -31,7 +31,7 @@ def game_loop():
             hand = result["hand"]
             winner = result["winner"]
 
-            money = update_balance(money, hand["bet"], winner)
+            money = update_balance(money, hand, winner)
             save.saving(game_save, money, hand, winner)
 
         save.game_played(game_save)
@@ -76,11 +76,12 @@ def ask_bet(money):
             money -= bet
             return money, bet
 
-def initialized_round(cards, bet):
+def initialized_round(cards, money, bet):
     player_hand = {
         "hand": [],
         "score": 0,
         "bet": bet,
+        "insurance": 0,
         "actions": []
     }
 
@@ -94,7 +95,10 @@ def initialized_round(cards, bet):
     player_hand = player.dealt(cards, player_hand)
     dealer_hand = dealer.dealt_hidden(cards, dealer_hand)
 
-    return dealer_hand, player_hand
+    if dealer_hand["hand"][0]["rank"] == "A":
+        player_hand, money = player.ask_insurance(player_hand, money, bet)
+
+    return dealer_hand, player_hand, money
 
 def play_player_turn(cards, hand, money):
     if hand["score"] >= 21:
@@ -135,9 +139,17 @@ def play_player_turn(cards, hand, money):
     return [hand], money, False
 
 def play_round(cards, money, bet):
-    dealer_hand, player_hand = initialized_round(cards, bet)
+    dealer_hand, player_hand, money = initialized_round(cards, money, bet)
     player_hands = [player_hand]
     i = 0
+
+    if (dealer_hand["score"] == 21 and player_hand["insurance"] > 0):
+        dealer.reveal_hidden_card(dealer_hand)
+        results = [{
+            "winner": show_result(dealer_hand, player_hand),
+            "hand": player_hand
+        }]
+        return results
 
     while i < len(player_hands):
         new_hands, money, splitted = play_player_turn(cards, player_hands[i], money)
@@ -167,9 +179,9 @@ def show_result(dealer_hand, player_hand):
     print(f"-{translate.translate('The Player has')}: {player_hand["score"]}.")
     print()
 
-    if (winner == "dealer"):
+    if (winner == "dealer" or winner == "dealer_blackjack"):
         print(f"{translate.translate('The Dealer won')}.")
-    elif (winner == "player" or winner == "blackjack"):
+    elif (winner == "player" or winner == "player_blackjack"):
         print(f"{translate.translate('The Player won')}.")
     else:
         print(f"{translate.translate('No winners')}.")
@@ -184,15 +196,22 @@ def show_balance(money):
     print(f"{translate.translate("Current balance")}: {currency}{money}.")
     print()
 
-def update_balance(money, bet, winner):
+def update_balance(money, hand, winner):
     blackjack_payout = float(config["Game"]["blackjack_payout"])
+    bet = hand["bet"]
 
     if (winner == "player"):
         money += bet * 2
-    elif (winner == "blackjack"):
+    elif (winner == "player_blackjack"):
         money += bet+ int(bet * blackjack_payout)
     elif (winner == "push"):
         money += bet
+
+    if hand["insurance"] > 0:
+        if (winner == "dealer_blackjack"):
+            money += hand["insurance"] * 2
+        else:
+            money -= hand["insurance"]
 
     return money
 
