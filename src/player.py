@@ -40,17 +40,17 @@ def draw(cards, hand):
 
     return hand
 
-def ask_choice(hand, money):
-    bet = hand["bet"]
-
+def ask_choice(hand, dealer_hand, money):
     choices = {
         "H": "Hit",
         "S": "Stand",
     }
-    if (rules.can_double_down(hand, money, bet)):
+    if (rules.can_double_down(hand, money)):
         choices["D"] = "Double Down"
-    if (rules.can_split(hand, money, bet)):
+    if (rules.can_split(hand, money)):
         choices["P"] = "Split"
+    if (rules.can_insurance(hand, dealer_hand, money)):
+        choices["I"] = "Insurance"
 
     while (True):
         if ("id" in hand):

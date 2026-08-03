@@ -53,8 +53,9 @@ def is_blackjack(hand):
 
     return "A" in ranks and any(rank in ["10", "J", "Q", "K"] for rank in ranks)
 
-def can_double_down(hand, money, bet):
+def can_double_down(hand, money):
     double_after_split = config.getboolean("Game", "double_after_split")
+    bet = hand["bet"]
     
     if (constants.ACTION_SPLIT in hand["actions"] and not double_after_split):
         return False
@@ -65,10 +66,21 @@ def can_double_down(hand, money, bet):
 
     return True
 
-def can_split(hand, money, bet):
+def can_split(hand, money):
+    bet = hand["bet"]
+
     if (len(hand["hand"]) > 2):
             return False
     if (bet > money):
         return False
     
     return hand["hand"][0]["value"] == hand["hand"][1]["value"]
+
+def can_insurance(hand, dealer_hand, money):
+    bet = hand["bet"]
+
+    if (dealer_hand["hand"][0]["rank"] == "A"):
+        if (bet // 2 < money):
+            return True
+
+    return False

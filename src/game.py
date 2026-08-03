@@ -25,7 +25,7 @@ def game_loop():
 
     while money > 0:
         money, bet = ask_bet(money)
-        results = play_round(cards, money, bet)
+        results, money = play_round(cards, money, bet)
 
         for result in results:
             hand = result["hand"]
@@ -76,7 +76,7 @@ def ask_bet(money):
             money -= bet
             return money, bet
 
-def initialized_round(cards, money, bet):
+def initialized_round(cards, bet):
     player_hand = {
         "hand": [],
         "score": 0,
@@ -95,18 +95,15 @@ def initialized_round(cards, money, bet):
     player_hand = player.dealt(cards, player_hand)
     dealer_hand = dealer.dealt_hidden(cards, dealer_hand)
 
-    if dealer_hand["hand"][0]["rank"] == "A":
-        player_hand, money = player.ask_insurance(player_hand, money, bet)
+    return dealer_hand, player_hand
 
-    return dealer_hand, player_hand, money
-
-def play_player_turn(cards, hand, money):
+def play_player_turn(cards, hand, dealer_hand, money):
     if hand["score"] >= 21:
         return [hand], money, False
 
     while True:
         print()
-        choice = player.ask_choice(hand, money)
+        choice = player.ask_choice(hand, dealer_hand, money)
         print()
 
         if (choice == "H"):
@@ -136,27 +133,33 @@ def play_player_turn(cards, hand, money):
             money -= hand["bet"]
             return [hand1, hand2], money, True
 
+        elif (choice == "I"):
+            hand["actions"].append(constants.ACTION_INSURANCE)
+            money -= hand["bet"] // 2
+            hand["insurance"] = hand["bet"] // 2
+            break
+
     return [hand], money, False
 
 def play_round(cards, money, bet):
-    dealer_hand, player_hand, money = initialized_round(cards, money, bet)
+    dealer_hand, player_hand = initialized_round(cards, bet)
     player_hands = [player_hand]
     i = 0
 
-    if (dealer_hand["score"] == 21 and player_hand["insurance"] > 0):
-        dealer.reveal_hidden_card(dealer_hand)
-        results = [{
-            "winner": show_result(dealer_hand, player_hand),
-            "hand": player_hand
-        }]
-        return results
-
     while i < len(player_hands):
-        new_hands, money, splitted = play_player_turn(cards, player_hands[i], money)
+        new_hands, money, splitted = play_player_turn(cards, player_hands[i], dealer_hand, money)
         player_hands[i:i+1] = new_hands
 
         if not splitted:
             i += 1
+
+        if (dealer_hand["score"] == 21 and player_hand["insurance"] > 0):
+            dealer.reveal_hidden_card(dealer_hand)
+            results = [{
+                "winner": show_result(dealer_hand, player_hand),
+                "hand": player_hand
+            }]
+            return results
 
     dealer.reveal_hidden_card(dealer_hand)
     dealer_hand = dealer.ask_draw(cards, dealer_hand)
@@ -169,7 +172,7 @@ def play_round(cards, money, bet):
             "hand": hand
         })
 
-    return results
+    return results, money
 
 def show_result(dealer_hand, player_hand):
     winner = rules.get_winner(dealer_hand, player_hand)
